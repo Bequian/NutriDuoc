@@ -7,10 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
 import com.example.nutriduoc.ui.theme.NutriDuocTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,28 +19,36 @@ class MainActivity : ComponentActivity() {
         setContent {
             NutriDuocTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Box(modifier = Modifier.padding(innerPadding)){
+                        var pantallaActual by remember { mutableStateOf("Login") }
+
+                        when (pantallaActual){
+                            "Login" -> {
+                                LoginScreen(
+                                    onNavegarRegistro = { pantallaActual = "Registro" },
+                                    onNavegarRecuperar = { pantallaActual = "Recuperar" },
+                                    onLoginSuccess = { pantallaActual = "Minuta" }
+                                )
+                            }
+                            "Registro" -> {
+                                RegistroUsuario(
+                                    onVolver = { pantallaActual = "Login" }
+                                )
+                            }
+                            "Recuperar" -> {
+                                PasswordRecovery(
+                                    onVolver = { pantallaActual = "Login" }
+                                )
+                            }
+                            "Minuta" -> {
+                                MinutaScreen(
+                                    onCerrarSesion = { pantallaActual = "Login" }
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hi, my name is $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NutriDuocTheme {
-        Greeting("Angelo")
     }
 }
